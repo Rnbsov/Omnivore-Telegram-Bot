@@ -1,0 +1,5 @@
+{
+    "tasks": {
+      "dev": "deno run --watch --allow-net --allow-env bot.ts"
+    }
+  }

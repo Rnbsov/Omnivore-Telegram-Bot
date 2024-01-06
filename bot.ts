@@ -1,7 +1,10 @@
 import { load } from 'https://deno.land/std@0.211.0/dotenv/mod.ts'
 import { Bot } from 'https://deno.land/x/grammy@v1.20.2/mod.ts'
+import { conversations } from 'https://deno.land/x/grammy_conversations@v1.2.0/mod.ts'
 import { mainKeyboardLayout } from './src/keyboards.ts'
 import { MyContext, sessionHandler } from './src/sessionsHandler.ts'
+import { createConversation } from 'https://deno.land/x/grammy_conversations@v1.2.0/conversation.ts'
+import { askApiKey } from './src/conversations.ts'
 
 const env = await load()
 
@@ -9,27 +12,33 @@ const bot = new Bot<MyContext>(env['BOT_TOKEN'])
 
 bot.use(sessionHandler(bot.token))
 
-bot.command('start', ctx =>
-  ctx.reply(
-    'Welcome! Up and running. \n\n<b>👾 Save a bunch</b> - allows you to save a bunch of urls at once',
+// conversations
+bot.use(conversations())
+
+bot.use(createConversation(askApiKey))
+
+// handlers
+
+bot.command('start', async ctx => {
+  await ctx.reply(
+    'Hey there! I\'m your ultimate bot for all Omnivore things. 🌟 \n\n<b>👾 Save a bunch</b> - allows you to save a bunch of urls at once \n\nTo unlock these features, I\'ll need an API token. \nDon\'t worry, your information is handled securely.',
     {
       reply_markup: mainKeyboardLayout,
       parse_mode: 'HTML',
     }
   )
-)
-
-bot.hears('set', ctx => {
-  ctx.session.apiToken = 'smth'
-  ctx.reply('set new token')
-})
-
-bot.hears('get', ctx => {
-  const token = ctx.session.apiToken
-  ctx.reply(`your token ${token}`)
+  
+  await ctx.conversation.enter('askApiKey')
 })
 
 bot.hears('👾 Save a bunch of urls', ctx => {
+  const token = ctx.session.apiToken
+
+  if (token)
+    return ctx.reply(`Just to let you know, we take your privacy seriously and ensure that your information is encrypted and stored securely.
+  
+  So in order to have ability interact with you library, please use command /api`)
+
   ctx.reply(`Send me urls in following format:
   
   url1

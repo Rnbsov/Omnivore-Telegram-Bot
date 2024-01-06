@@ -1,18 +1,30 @@
+import { load } from 'https://deno.land/std@0.211.0/dotenv/mod.ts'
 import { Bot } from 'https://deno.land/x/grammy@v1.20.2/mod.ts'
+import { mainKeyboardLayout } from './src/keyboards.ts'
 
-// Create an instance of the `Bot` class and pass your bot token to it.
-const bot = new Bot(Deno.env.get('BOT_TOKEN')) // <-- put your bot token between the ""
+const env = await load()
 
-// You can now register listeners on your bot object `bot`.
-// grammY will call the listeners when users send messages to your bot.
+const bot = new Bot(env['BOT_TOKEN'])
 
-// Handle the /start command.
-bot.command('start', ctx => ctx.reply('Welcome! Up and running.'))
-// Handle other messages.
-bot.on('message', ctx => ctx.reply('Got another message!'))
+bot.command('start', ctx =>
+  ctx.reply(
+    'Welcome! Up and running. \n\n<b>👾 Save a bunch</b> - allows you to save a bunch of urls at once',
+    {
+      reply_markup: mainKeyboardLayout,
+      parse_mode: "HTML"
+    }
+  )
+)
 
-// Now that you specified how to handle messages, you can start your bot.
-// This will connect to the Telegram servers and wait for messages.
+bot.hears('👾 Save a bunch of urls', ctx => {
+  
+  ctx.reply(`Send me urls in following format:
+  
+  url1
+  url2
+  url3
+  
+  each on separate line`)
+})
 
-// Start the bot.
 bot.start()

@@ -1,6 +1,8 @@
 import { type Conversation } from 'https://deno.land/x/grammy_conversations@v1.2.0/mod.ts'
 import { MyContext } from './sessionsHandler.ts'
-import { mainKeyboardLayout } from "./keyboards.ts";
+import { mainKeyboardLayout } from './keyboards.ts'
+import { OmnivoreApi } from './omnivore/api.ts'
+import { parseUrls } from './utils/parseUrls.ts'
 
 type MyConversation = Conversation<MyContext>
 
@@ -24,9 +26,33 @@ Once you've got it, just send it my way\\. 🚀`,
 
   ctx.session.apiToken = token
 
-  ctx.reply('Fantastic! Now you\'re all set to explore Omnivore bot\'s amazing features. \n\nHow can I assist you today? ✨',
-  {
-    reply_markup: mainKeyboardLayout,
-    parse_mode: 'HTML',
-  })
+  ctx.reply(
+    "Fantastic! Now you're all set to explore Omnivore bot's amazing features. \n\nHow can I assist you today? ✨",
+    {
+      reply_markup: mainKeyboardLayout,
+      parse_mode: 'HTML',
+    }
+  )
+}
+
+export async function saveBunchUrls(
+  conversation: MyConversation,
+  ctx: MyContext
+) {
+  const urls = await conversation.form.text()
+
+  if (urls === '') {
+    await ctx.reply('No urls provided')
+    return
+  }
+
+  const urlsArray = parseUrls(urls)
+  console.log(urlsArray)
+  const token = ctx.session.apiToken
+  const api = new OmnivoreApi(token)
+
+  await api.processUrls(urlsArray)
+  await ctx.reply(
+    `Successfully added ${api.addedEntriesCount} of ${urlsArray.length} links!\nFailed to add ${api.failedEntriesCount} links.`
+  )
 }

@@ -975,6 +975,7 @@
     }
   },
   "redirects": {
+    "https://deno.land/x/chalk_deno/source/index.js": "https://deno.land/x/chalk_deno@v4.1.1-deno/source/index.js",
     "https://deno.land/x/grammy_storages/free/src/mod.ts": "https://deno.land/x/grammy_storages@v2.4.1/free/src/mod.ts",
     "https://deno.land/x/grammy_storages/mongodb/src/mod.ts": "https://deno.land/x/grammy_storages@v2.4.1/mongodb/src/mod.ts",
     "https://esm.sh/@supabase/supabase-js@1.24": "https://esm.sh/@supabase/supabase-js@1.24.0",
@@ -1033,6 +1034,7 @@
     "https://deno.land/std@0.211.0/dotenv/mod.ts": "bcfa9c102d5ce6218ec0c4a69aa0fc1009fc309a85448f98a8debaa75866a3d7",
     "https://deno.land/std@0.211.0/dotenv/parse.ts": "ddcb04a8a7198918cfc52efbebb0d4fc51abfea913649912fcc1cf4c52bd81a2",
     "https://deno.land/std@0.211.0/dotenv/stringify.ts": "74521a8e907adffff19f132765902a8c51743e386107b91cc934bae154031e84",
+    "https://deno.land/std@0.211.0/fmt/colors.ts": "be082d6a6bbb2980ae7b2bf8c23c6bb2811ba90a06a9bcb861344a71784c5a99",
     "https://deno.land/x/grammy@v1.20.2/bot.ts": "bbfc31f976a27a48992ebb21bcdc137f216eb28e32cc5de0041dcc8fca53d5b8",
     "https://deno.land/x/grammy@v1.20.2/composer.ts": "a86dcd6c83e91f720ceb85dab2b1c7b966fc18fc6440848b87b4897fcaa63fc8",
     "https://deno.land/x/grammy@v1.20.2/context.ts": "3e9b8e277f8b75bed20b46047ad93b027a182e9d3504f1f2d2bba0852d0bb77f",

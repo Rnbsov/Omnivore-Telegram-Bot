@@ -1,10 +1,13 @@
 import { load } from 'https://deno.land/std@0.211.0/dotenv/mod.ts'
 import { Bot } from 'https://deno.land/x/grammy@v1.20.2/mod.ts'
 import { mainKeyboardLayout } from './src/keyboards.ts'
+import { MyContext, sessionHandler } from "./src/sessionsHandler.ts";
 
 const env = await load()
 
-const bot = new Bot(env['BOT_TOKEN'])
+const bot = new Bot<MyContext>(env['BOT_TOKEN'])
+
+bot.use(sessionHandler())
 
 bot.command('start', ctx =>
   ctx.reply(

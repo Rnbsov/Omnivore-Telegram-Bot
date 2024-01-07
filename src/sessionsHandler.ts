@@ -12,6 +12,7 @@ const env = await load()
 
 console.log(Deno.env.get('SUPABASE_URL'))
 console.log()
+console.log()
 console.log(Deno.env.get('SUPABASE_KEY'))
 
 console.log(env['BOT_TOKEN'])

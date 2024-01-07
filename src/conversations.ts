@@ -24,7 +24,7 @@ Once you've got it, just send it my way\\. 🚀`,
 
   const token = await conversation.form.text()
 
-  ctx.session.apiToken = token
+  conversation.session.apiToken = token
 
   ctx.reply(
     "Fantastic! Now you're all set to explore Omnivore bot's amazing features. \n\nHow can I assist you today? ✨",
@@ -49,7 +49,7 @@ export async function saveBunchUrls(
   const urlsArray = parseUrls(urls)
   console.log(urlsArray)
   const token = ctx.session.apiToken
-  
+
   const api = new OmnivoreApi(token)
 
   await api.processUrls(urlsArray)

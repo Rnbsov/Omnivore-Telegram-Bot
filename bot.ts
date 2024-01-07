@@ -1,18 +1,49 @@
+import { load } from 'https://deno.land/std@0.211.0/dotenv/mod.ts'
 import { Bot } from 'https://deno.land/x/grammy@v1.20.2/mod.ts'
+import { createConversation } from 'https://deno.land/x/grammy_conversations@v1.2.0/conversation.ts'
+import { conversations } from 'https://deno.land/x/grammy_conversations@v1.2.0/mod.ts'
+import { askApiKey, saveBunchUrls } from './src/conversations.ts'
+import { MyContext, sessionHandler } from './src/sessionsHandler.ts'
 
-// Create an instance of the `Bot` class and pass your bot token to it.
-const bot = new Bot(Deno.env.get('BOT_TOKEN')) // <-- put your bot token between the ""
+const env = await load()
 
-// You can now register listeners on your bot object `bot`.
-// grammY will call the listeners when users send messages to your bot.
+const bot = new Bot<MyContext>(env['BOT_TOKEN'])
 
-// Handle the /start command.
-bot.command('start', ctx => ctx.reply('Welcome! Up and running.'))
-// Handle other messages.
-bot.on('message', ctx => ctx.reply('Got another message!'))
+bot.use(sessionHandler())
 
-// Now that you specified how to handle messages, you can start your bot.
-// This will connect to the Telegram servers and wait for messages.
+// conversations
+bot.use(conversations())
 
-// Start the bot.
+bot.use(createConversation(askApiKey))
+bot.use(createConversation(saveBunchUrls))
+
+// handlers
+bot.command('start', async ctx => {
+  await ctx.reply(
+    "Hey there! I'm your ultimate bot for all Omnivore things. 🌟 \n\n<b>👾 Save a bunch</b> - allows you to save a bunch of urls at once \n\nTo unlock these features, I'll need an API token. \nDon't worry, your information is handled securely.",
+    {
+      parse_mode: 'HTML',
+    }
+  )
+
+  await ctx.conversation.enter('askApiKey')
+})
+
+bot.hears('👾 Save a bunch of urls', async ctx => {
+  await ctx.reply(
+    `Send me urls in following format:
+  
+  url1
+  url2
+  url3
+  
+  each on separate line`,
+    {
+      reply_markup: { force_reply: true },
+    }
+  )
+
+  await ctx.conversation.enter('saveBunchUrls')
+})
+
 bot.start()

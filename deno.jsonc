@@ -1,5 +1,9 @@
 {
     "tasks": {
-      "dev": "deno run --watch --allow-net --allow-env bot.ts"
+      "start": "deno run --watch --allow-net --allow-env --allow-read bot.ts",
+      "dev": "export DEBUG='grammy*' && deno run --watch --allow-net --allow-env --allow-read bot.ts"
+    },
+    "fmt": {
+      "lineWidth": 140
     }
   }

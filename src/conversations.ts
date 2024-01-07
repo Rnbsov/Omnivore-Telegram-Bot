@@ -49,6 +49,7 @@ export async function saveBunchUrls(
   const urlsArray = parseUrls(urls)
   console.log(urlsArray)
   const token = ctx.session.apiToken
+  
   const api = new OmnivoreApi(token)
 
   await api.processUrls(urlsArray)

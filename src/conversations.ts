@@ -39,9 +39,10 @@ export async function saveBunchUrls(
   conversation: MyConversation,
   ctx: MyContext
 ) {
-  const urls = await conversation.form.text()
+  const newCtx = await conversation.waitFor("msg:text")
+  const urls = newCtx.message?.text
 
-  if (urls === '') {
+  if (!urls || urls === '') {
     await ctx.reply('No urls provided')
     return
   }
@@ -65,14 +66,12 @@ export async function updateToken(
   conversation: MyConversation,
   ctx: MyContext
 ) {
-  const token = await conversation.form.text()
+  const newCtx = await conversation.waitFor("msg:text")
+  const token = newCtx.message?.text
 
-  conversation.session.apiToken = token
+  conversation.session.apiToken = token || ctx.session.apiToken
 
-  await ctx.reply(
-    `You've Successfully updated the token 🎉`,
-    {
-      reply_markup: mainKeyboardLayout,
-    }
-  )
+  await ctx.reply(`You've Successfully updated the token 🎉`, {
+    reply_markup: mainKeyboardLayout,
+  })
 }

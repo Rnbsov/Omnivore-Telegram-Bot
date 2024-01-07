@@ -1,5 +1,5 @@
 import { load } from 'https://deno.land/std@0.211.0/dotenv/mod.ts'
-import { Bot } from 'https://deno.land/x/grammy@v1.20.2/mod.ts'
+import { Bot } from 'https://deno.land/x/grammy@v1.20.3/mod.ts'
 import { createConversation } from 'https://deno.land/x/grammy_conversations@v1.2.0/conversation.ts'
 import { conversations } from 'https://deno.land/x/grammy_conversations@v1.2.0/mod.ts'
 import {
@@ -8,10 +8,11 @@ import {
   updateToken,
 } from './src/conversations.ts'
 import { MyContext, sessionHandler } from './src/sessionsHandler.ts'
+import { cancelMenu } from './src/menus.ts'
 
 await load({ export: true })
 
-const bot = new Bot<MyContext>(Deno.env.get('BOT_TOKEN'))
+const bot = new Bot<MyContext>(Deno.env.get('BOT_TOKEN') || '')
 
 bot.use(sessionHandler())
 
@@ -21,6 +22,15 @@ bot.use(conversations())
 bot.use(createConversation(askApiKey))
 bot.use(createConversation(saveBunchUrls))
 bot.use(createConversation(updateToken))
+
+// Menu
+bot.use(cancelMenu)
+
+bot.hears('err', ctx =>
+  ctx.reply('bla', {
+    reply_markup: cancelMenu,
+  })
+)
 
 // handlers
 bot.command('start', async ctx => {
@@ -44,7 +54,7 @@ bot.hears('👾 Save a bunch of urls', async ctx => {
   
   each on separate line`,
     {
-      reply_markup: { force_reply: true },
+      reply_markup: cancelMenu,
     }
   )
 
@@ -58,7 +68,7 @@ bot.hears('✨ Set new token', async ctx => {
 You can get new by following this guide [Getting an API token](https://docs.omnivore.app/integrations/api.html#getting-an-api-token)`,
     {
       parse_mode: 'MarkdownV2',
-      reply_markup: { force_reply: true },
+      reply_markup: cancelMenu,
     }
   )
 

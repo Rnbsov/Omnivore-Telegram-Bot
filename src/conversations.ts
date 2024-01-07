@@ -60,3 +60,19 @@ export async function saveBunchUrls(
     }
   )
 }
+
+export async function updateToken(
+  conversation: MyConversation,
+  ctx: MyContext
+) {
+  const token = await conversation.form.text()
+
+  conversation.session.apiToken = token
+
+  await ctx.reply(
+    `You've Successfully updated the token 🎉`,
+    {
+      reply_markup: mainKeyboardLayout,
+    }
+  )
+}

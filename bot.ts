@@ -2,7 +2,11 @@ import { load } from 'https://deno.land/std@0.211.0/dotenv/mod.ts'
 import { Bot } from 'https://deno.land/x/grammy@v1.20.2/mod.ts'
 import { createConversation } from 'https://deno.land/x/grammy_conversations@v1.2.0/conversation.ts'
 import { conversations } from 'https://deno.land/x/grammy_conversations@v1.2.0/mod.ts'
-import { askApiKey, saveBunchUrls } from './src/conversations.ts'
+import {
+  askApiKey,
+  saveBunchUrls,
+  updateToken,
+} from './src/conversations.ts'
 import { MyContext, sessionHandler } from './src/sessionsHandler.ts'
 
 const env = await load()
@@ -16,6 +20,7 @@ bot.use(conversations())
 
 bot.use(createConversation(askApiKey))
 bot.use(createConversation(saveBunchUrls))
+bot.use(createConversation(updateToken))
 
 // handlers
 bot.command('start', async ctx => {
@@ -44,6 +49,20 @@ bot.hears('👾 Save a bunch of urls', async ctx => {
   )
 
   await ctx.conversation.enter('saveBunchUrls')
+})
+
+bot.hears('✨ Set new token', async ctx => {
+  await ctx.reply(
+    `Okay, just send me the new one
+    
+You can get new by following this guide [Getting an API token](https://docs.omnivore.app/integrations/api.html#getting-an-api-token)`,
+    {
+      parse_mode: 'MarkdownV2',
+      reply_markup: { force_reply: true },
+    }
+  )
+
+  await ctx.conversation.enter('updateToken')
 })
 
 bot.start()

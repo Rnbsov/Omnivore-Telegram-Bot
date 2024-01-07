@@ -10,7 +10,8 @@ import { ConversationFlavor } from "https://deno.land/x/grammy_conversations@v1.
 
 const env = await load({envPath: '../.env'})
 
-console.log(env)
+console.log(Deno.env.get('SUPABASE_KEY'))
+console.log(Deno.env.get('SUPABASE_URL'))
 const supabase = createClient(
   env['SUPABASE_URL'],
   env['SUPABASE_KEY']

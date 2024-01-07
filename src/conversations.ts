@@ -47,13 +47,16 @@ export async function saveBunchUrls(
   }
 
   const urlsArray = parseUrls(urls)
-  console.log(urlsArray)
+
   const token = ctx.session.apiToken
 
   const api = new OmnivoreApi(token)
 
   await api.processUrls(urlsArray)
   await ctx.reply(
-    `Successfully added ${api.addedEntriesCount} of ${urlsArray.length} links!\nFailed to add ${api.failedEntriesCount} links.`
+    `Successfully added ${api.addedEntriesCount} of ${urlsArray.length} links!\nFailed to add ${api.failedEntriesCount} links.`,
+    {
+      reply_markup: mainKeyboardLayout,
+    }
   )
 }

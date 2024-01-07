@@ -8,13 +8,11 @@ import { supabaseAdapter } from 'https://deno.land/x/grammy_storages@v2.4.1/supa
 import { load } from 'https://deno.land/std@0.211.0/dotenv/mod.ts'
 import { ConversationFlavor } from "https://deno.land/x/grammy_conversations@v1.2.0/conversation.ts";
 
-const env = await load({envPath: '../.env'})
+await load({export: true})
 
-console.log(Deno.env.get('SUPABASE_KEY'))
-console.log(Deno.env.get('SUPABASE_URL'))
 const supabase = createClient(
-  env['SUPABASE_URL'],
-  env['SUPABASE_KEY']
+  Deno.env.get('SUPABASE_URL'),
+  Deno.env.get('SUPABASE_KEY')
 )
 
 const storage = supabaseAdapter({

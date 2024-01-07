@@ -29,24 +29,6 @@ bot.command('start', async ctx => {
   await ctx.conversation.enter('askApiKey')
 })
 
-bot.hears('set', ctx => {
-  ctx.session.apiToken = 'apple';
-  console.log('Token set:', ctx.session.apiToken); // Add this line for logging
-  ctx.reply('set new token');
-});
-
-bot.hears('get', async ctx => {
-  try {
-    console.log('Current token:', ctx.session.apiToken); // Add this line for logging
-    await ctx.reply(`carrot and ${ctx.session.apiToken}`);
-  } catch (error) {
-    console.log(error);
-  }
-})
-
-bot.command('up', ctx => ctx.session.counter++)
-bot.command('sh', ctx => ctx.reply(`${ctx.session.counter}`))
-
 bot.hears('👾 Save a bunch of urls', async ctx => {
   await ctx.reply(
     `Send me urls in following format:

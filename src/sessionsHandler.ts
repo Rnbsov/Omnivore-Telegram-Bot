@@ -22,7 +22,6 @@ const storage = supabaseAdapter({
 
 interface SessionData {
   apiToken: string
-  counter: number
 }
 
 export type MyContext = Context & SessionFlavor<SessionData> & ConversationFlavor
@@ -30,7 +29,6 @@ export type MyContext = Context & SessionFlavor<SessionData> & ConversationFlavo
 function initial(): SessionData {
   return {
     apiToken: '',
-    counter: 1
   }
 }
 

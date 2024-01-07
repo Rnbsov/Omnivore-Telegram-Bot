@@ -33,7 +33,7 @@ export class OmnivoreApi implements OmnivoreApiInterface {
     }
 
     const requestBody = {
-      SaveUrlQuery,
+      query: SaveUrlQuery,
       variables,
     }
 
@@ -48,6 +48,7 @@ export class OmnivoreApi implements OmnivoreApiInterface {
       })
 
       const data = await response.json()
+      
       const { url: successUrl } = data.data.saveUrl
 
       if (successUrl) {

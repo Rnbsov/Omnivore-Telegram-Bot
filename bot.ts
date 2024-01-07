@@ -9,9 +9,9 @@ import {
 } from './src/conversations.ts'
 import { MyContext, sessionHandler } from './src/sessionsHandler.ts'
 
-const env = await load()
+await load({ export: true })
 
-const bot = new Bot<MyContext>(env['BOT_TOKEN'])
+const bot = new Bot<MyContext>(Deno.env.get('BOT_TOKEN'))
 
 bot.use(sessionHandler())
 

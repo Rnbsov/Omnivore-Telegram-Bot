@@ -7,8 +7,9 @@ import {
   saveBunchUrls,
   updateToken,
 } from './src/conversations.ts'
-import { MyContext, sessionHandler } from './src/sessionsHandler.ts'
 import { cancelMenu } from './src/menus.ts'
+import { OmnivoreApi } from './src/omnivore/api.ts'
+import { MyContext, sessionHandler } from './src/sessionsHandler.ts'
 
 await load({ export: true })
 
@@ -27,6 +28,20 @@ bot.use(createConversation(updateToken))
 bot.use(cancelMenu)
 
 // handlers
+bot.on('message:entities:url', async ctx => {
+  const token = ctx.session.apiToken
+
+  const api = new OmnivoreApi(token)
+
+  await api.saveUrl(ctx.message.text || '')
+
+  if (api.addedEntriesCount === 1) {
+    await ctx.reply('Successfully added link to Omnivore! 😸👍')
+  } else {
+    await ctx.reply('Failed to add the link. 😿')
+  }
+})
+
 bot.command('start', async ctx => {
   await ctx.reply(
     "Hey there! I'm your ultimate bot for all Omnivore things. 🌟 \n\n<b>👾 Save a bunch</b> - allows you to save a bunch of urls at once \n\nTo unlock these features, I'll need an API token. \nDon't worry, your information is handled securely.",

@@ -39,7 +39,7 @@ export async function saveBunchUrls(
   conversation: MyConversation,
   ctx: MyContext
 ) {
-  const newCtx = await conversation.waitFor("msg:text")
+  const newCtx = await conversation.waitFor('msg:text')
   const urls = newCtx.message?.text
 
   if (!urls || urls === '') {
@@ -66,7 +66,7 @@ export async function updateToken(
   conversation: MyConversation,
   ctx: MyContext
 ) {
-  const newCtx = await conversation.waitFor("msg:text")
+  const newCtx = await conversation.waitFor('msg:text')
   const token = newCtx.message?.text
 
   conversation.session.apiToken = token || ctx.session.apiToken

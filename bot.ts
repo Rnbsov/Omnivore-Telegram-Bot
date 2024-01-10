@@ -14,11 +14,16 @@ import {
 import { cancelMenu } from './src/menus.ts'
 import { OmnivoreApi } from './src/omnivore/api.ts'
 import { MyContext, sessionHandler } from './src/sessionsHandler.ts'
+import { inlineQuery } from "./src/inlineQuery.ts";
 
 await load({ export: true })
 
 const bot = new Bot<MyContext>(Deno.env.get('BOT_TOKEN') || '')
 
+// inline query
+bot.use(inlineQuery)
+
+// sessions
 bot.use(sessionHandler())
 
 // conversations

@@ -26,12 +26,6 @@ bot.use(createConversation(updateToken))
 // Menu
 bot.use(cancelMenu)
 
-bot.hears('err', ctx =>
-  ctx.reply('bla', {
-    reply_markup: cancelMenu,
-  })
-)
-
 // handlers
 bot.command('start', async ctx => {
   await ctx.reply(

@@ -20,8 +20,6 @@ await load({ export: true })
 
 const bot = new Bot<MyContext>(Deno.env.get('BOT_TOKEN') || '')
 
-// inline query
-bot.use(inlineQuery)
 
 // sessions
 bot.use(sessionHandler())
@@ -35,6 +33,9 @@ bot.use(createConversation(updateToken))
 
 // Menu
 bot.use(cancelMenu)
+
+// inline query
+bot.use(inlineQuery)
 
 // handlers
 bot.on('message:entities:url', async ctx => {

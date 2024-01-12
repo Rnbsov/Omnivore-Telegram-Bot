@@ -111,17 +111,12 @@ export class OmnivoreApi implements OmnivoreApiInterface {
         console.error('GraphQL request returned errors:', data.errors)
         return {
           results: [],
-          nextOffset: '', // No next offset in case of errors
         }
       }
 
       const edges = data.data.search.edges
-      const pageInfo = data.data.search.pageInfo
 
       if (edges && edges.length > 0) {
-        // Process the data (e.g., log or display)
-        console.log(edges)
-
         // Transform edges into InlineQueryResultArticle objects
         const results = edges.map((edge: any) => {
           return InlineQueryResultBuilder.article(
@@ -130,28 +125,20 @@ export class OmnivoreApi implements OmnivoreApiInterface {
           ).text(edge.node.url)
         })
 
-        // Determine the next offset based on pageInfo
-        const nextOffset = pageInfo.hasNextPage
-          ? pageInfo.endCursor
-          : ''
-
-        // Return the results and the next offset
+        // Return the results
         return {
           results,
-          nextOffset,
         }
       } else {
         console.log('No data found for the given query.')
         return {
           results: [],
-          nextOffset: '', // No results, so no next offset
         }
       }
     } catch (error) {
       console.error('GraphQL request failed:', error)
       return {
         results: [],
-        nextOffset: '', // No results, so no next offset
       }
     }
   }

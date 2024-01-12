@@ -34,6 +34,10 @@ function initial(): SessionData {
   }
 }
 
+function getSessionKey(ctx: Context): string | undefined {
+  return ctx.from?.id.toString()
+}
+
 export const sessionHandler = () => {
-  return session({ initial, storage })
+  return session({ initial, storage, getSessionKey })
 }

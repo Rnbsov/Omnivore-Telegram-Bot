@@ -1,5 +1,9 @@
 import { load } from 'https://deno.land/std@0.211.0/dotenv/mod.ts'
-import { Bot } from 'https://deno.land/x/grammy@v1.20.3/mod.ts'
+import {
+  Bot,
+  GrammyError,
+  HttpError,
+} from 'https://deno.land/x/grammy@v1.20.3/mod.ts'
 import { createConversation } from 'https://deno.land/x/grammy_conversations@v1.2.0/conversation.ts'
 import { conversations } from 'https://deno.land/x/grammy_conversations@v1.2.0/mod.ts'
 import {
@@ -10,11 +14,14 @@ import {
 import { cancelMenu } from './src/menus.ts'
 import { OmnivoreApi } from './src/omnivore/api.ts'
 import { MyContext, sessionHandler } from './src/sessionsHandler.ts'
+import { inlineQuery } from "./src/inlineQuery.ts";
 
 await load({ export: true })
 
 const bot = new Bot<MyContext>(Deno.env.get('BOT_TOKEN') || '')
 
+
+// sessions
 bot.use(sessionHandler())
 
 // conversations
@@ -26,6 +33,9 @@ bot.use(createConversation(updateToken))
 
 // Menu
 bot.use(cancelMenu)
+
+// inline query
+bot.use(inlineQuery)
 
 // handlers
 bot.on('message:entities:url', async ctx => {
@@ -85,3 +95,18 @@ You can get new by following this guide [Getting an API token](https://docs.omni
 })
 
 bot.start()
+
+bot.catch(err => {
+  const ctx = err.ctx
+  console.error(
+    `Error while handling update ${ctx.update.update_id}:`
+  )
+  const e = err.error
+  if (e instanceof GrammyError) {
+    console.error('Error in request:', e.description)
+  } else if (e instanceof HttpError) {
+    console.error('Could not contact Telegram:', e)
+  } else {
+    console.error('Unknown error:', e)
+  }
+})

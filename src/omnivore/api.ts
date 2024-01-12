@@ -3,7 +3,12 @@ import {
   green,
 } from 'https://deno.land/std@0.211.0/fmt/colors.ts'
 
-import { SaveUrlQuery, graphqlEndpoint } from './graphql.ts'
+import {
+  SaveUrlQuery,
+  graphqlEndpoint,
+  searchQuery,
+} from './graphql.ts'
+import { InlineQueryResultBuilder } from 'https://deno.land/x/grammy@v1.20.3/mod.ts'
 
 interface OmnivoreApiInterface {
   apiToken: string
@@ -48,7 +53,7 @@ export class OmnivoreApi implements OmnivoreApiInterface {
       })
 
       const data = await response.json()
-      
+
       const { url: successUrl } = data.data.saveUrl
 
       if (successUrl) {
@@ -80,6 +85,61 @@ export class OmnivoreApi implements OmnivoreApiInterface {
         setTimeout(resolve, OmnivoreApi.delayBetweenRequests)
       )
       await this.processUrls(urls, nextIndex)
+    }
+  }
+
+  async search(query: string, after?: string) {
+    try {
+      const response = await fetch(graphqlEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'a7858040-3d69-44cd-9c3b-6f333560da9b',
+        },
+        body: JSON.stringify({
+          query: searchQuery,
+          variables: {
+            term: query,
+            after,
+          },
+        }),
+      })
+
+      const data = await response.json()
+
+      if (data.errors) {
+        console.error('GraphQL request returned errors:', data.errors)
+        return {
+          results: [],
+        }
+      }
+
+      const edges = data.data.search.edges
+
+      if (edges && edges.length > 0) {
+        // Transform edges into InlineQueryResultArticle objects
+        const results = edges.map((edge: any) => {
+          return InlineQueryResultBuilder.article(
+            edge.node.id,
+            edge.node.title, {description: edge.node.description, thumbnail_url: edge.node.image, url: edge.node.url}
+          ).text(edge.node.url)
+        })
+
+        // Return the results
+        return {
+          results,
+        }
+      } else {
+        console.log('No data found for the given query.')
+        return {
+          results: [],
+        }
+      }
+    } catch (error) {
+      console.error('GraphQL request failed:', error)
+      return {
+        results: [],
+      }
     }
   }
 }

@@ -113,6 +113,7 @@ export class OmnivoreApi implements OmnivoreApiInterface {
         console.error('GraphQL request returned errors:', data.errors)
         return {
           results: [],
+          nextOffset: ''
         }
       }
 
@@ -137,12 +138,14 @@ export class OmnivoreApi implements OmnivoreApiInterface {
         console.log('No data found for the given query.')
         return {
           results: [],
+          nextOffset: ''
         }
       }
     } catch (error) {
       console.error('GraphQL request failed:', error)
       return {
         results: [],
+        nextOffset: ''
       }
     }
   }

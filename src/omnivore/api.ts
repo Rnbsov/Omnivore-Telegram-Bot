@@ -101,11 +101,13 @@ export class OmnivoreApi implements OmnivoreApiInterface {
           variables: {
             term: query,
             after,
+            first: 3
           },
         }),
       })
 
       const data = await response.json()
+      console.log("🚀 ~ OmnivoreApi ~ search ~ data:", data)
 
       if (data.errors) {
         console.error('GraphQL request returned errors:', data.errors)
@@ -115,6 +117,7 @@ export class OmnivoreApi implements OmnivoreApiInterface {
       }
 
       const edges = data.data.search.edges
+      const pageInfo = data.data.search.pageInfo
 
       if (edges && edges.length > 0) {
         // Transform edges into InlineQueryResultArticle objects
@@ -128,6 +131,7 @@ export class OmnivoreApi implements OmnivoreApiInterface {
         // Return the results
         return {
           results,
+          nextOffset: pageInfo.endCursor
         }
       } else {
         console.log('No data found for the given query.')

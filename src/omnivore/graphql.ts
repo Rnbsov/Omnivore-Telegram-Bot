@@ -17,8 +17,8 @@ export const SaveUrlQuery = `
 `
 
 export const searchQuery = `
-  query Search($term: String!, $after: String!) {
-    search(query: $term, after: $after) {
+  query Search($term: String!, $after: String!, $first: Int!) {
+    search(query: $term, after: $after, first: $first) {
       ... on SearchSuccess {
         edges {
           cursor

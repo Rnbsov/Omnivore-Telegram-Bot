@@ -12,12 +12,10 @@ inlineQuery.on('inline_query', async ctx => {
 
   const offset = ctx.inlineQuery.offset || ''
 
-  const { results } = await api.search(query, offset)
-
-  console.log(results)
+  const { results, nextOffset } = await api.search(query, offset)
 
   await ctx.answerInlineQuery(results, {
     cache_time: 300,
-    next_offset: '3',
+    next_offset: nextOffset,
   })
 })

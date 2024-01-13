@@ -94,7 +94,7 @@ export class OmnivoreApi implements OmnivoreApiInterface {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'a7858040-3d69-44cd-9c3b-6f333560da9b',
+          Authorization: this.apiToken,
         },
         body: JSON.stringify({
           query: searchQuery,

@@ -15,6 +15,7 @@ import { cancelMenu } from './src/menus.ts'
 import { OmnivoreApi } from './src/omnivore/api.ts'
 import { MyContext, sessionHandler } from './src/sessionsHandler.ts'
 import { inlineQuery } from "./src/inlineQuery.ts";
+import { fileListener } from "./src/files.ts";
 
 await load({ export: true })
 
@@ -36,6 +37,9 @@ bot.use(cancelMenu)
 
 // inline query
 bot.use(inlineQuery)
+
+// file handling
+bot.use(fileListener)
 
 // handlers
 bot.on('message:entities:url', async ctx => {

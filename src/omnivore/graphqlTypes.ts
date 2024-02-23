@@ -1,3 +1,5 @@
+import { InlineQueryResultArticle } from "https://deno.land/x/grammy_types@v3.4.6/inline.ts";
+
 interface LinkShareInfo {
   title: string
   description: string
@@ -276,3 +278,15 @@ export interface SearchError {
 }
 
 export type SearchResult = SearchSuccess | SearchError
+
+export interface SearchRequestResponse {
+  errors: SearchError
+  data: {
+    search: SearchSuccess
+  }
+}
+
+export interface SearchReturn {
+  results: InlineQueryResultArticle[]
+  nextOffset: string
+}

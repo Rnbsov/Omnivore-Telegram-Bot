@@ -9,6 +9,7 @@ import {
   searchQuery,
 } from './graphql.ts'
 import { InlineQueryResultBuilder } from 'https://deno.land/x/grammy@v1.20.3/mod.ts'
+import { SearchRequestResponse, SearchReturn } from "./graphqlTypes.ts";
 
 interface OmnivoreApiInterface {
   apiToken: string
@@ -88,7 +89,7 @@ export class OmnivoreApi implements OmnivoreApiInterface {
     }
   }
 
-  async search(query: string, after?: string) {
+  async search(query: string, after?: string): Promise<SearchReturn> {
     try {
       const response = await fetch(graphqlEndpoint, {
         method: 'POST',
@@ -106,8 +107,7 @@ export class OmnivoreApi implements OmnivoreApiInterface {
         }),
       })
 
-      const data = await response.json()
-      console.log("🚀 ~ OmnivoreApi ~ search ~ data:", data)
+      const data: SearchRequestResponse = await response.json()
 
       if (data.errors) {
         console.error('GraphQL request returned errors:', data.errors)
@@ -122,7 +122,7 @@ export class OmnivoreApi implements OmnivoreApiInterface {
 
       if (edges && edges.length > 0) {
         // Transform edges into InlineQueryResultArticle objects
-        const results = edges.map((edge: any) => {
+        const results = edges.map((edge) => {
           return InlineQueryResultBuilder.article(
             edge.node.id,
             edge.node.title, {description: edge.node.description, thumbnail_url: edge.node.image, url: edge.node.url}
@@ -132,7 +132,7 @@ export class OmnivoreApi implements OmnivoreApiInterface {
         // Return the results
         return {
           results,
-          nextOffset: pageInfo.endCursor
+          nextOffset: pageInfo.endCursor || ''
         }
       } else {
         console.log('No data found for the given query.')

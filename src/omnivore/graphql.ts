@@ -41,3 +41,18 @@ export const searchQuery = `
     }
   }
 `
+
+export const uploadFileMutation = `
+  mutation UploadFileRequest($input: UploadFileRequestInput!) {
+    uploadFileRequest(input: $input) {
+      ... on UploadFileRequestError {
+        errorCodes
+      }
+      ... on UploadFileRequestSuccess {
+        id
+        uploadSignedUrl
+        createdPageId
+      }
+    }
+  }
+`

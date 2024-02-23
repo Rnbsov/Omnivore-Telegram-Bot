@@ -1,5 +1,7 @@
 export function parseUrls(urls: string): string[] {
-  const urlsArray = urls.split(/https?:\/\/\S+/)
+  const regex = /(?:https?:\/\/|www\.)\S+?(?=\s|$)/g
 
-  return urlsArray
+  const urlsArray = urls.match(regex)
+
+  return urlsArray || []
 }

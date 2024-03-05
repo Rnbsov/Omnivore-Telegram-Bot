@@ -22,9 +22,9 @@ jobs:
       # Uncomment this step to verify the use of 'deno fmt' on each commit.
       # - name: Verify formatting
       #   run: deno fmt --check
-
+      - name: Run tests
+        run: deno test -A
       - name: Run linter
         run: deno lint || 1
 
-      - name: Run tests
-        run: deno test -A
+      

@@ -89,3 +89,23 @@ export async function setDefaultLabel(
     reply_markup: mainKeyboardLayout,
   })
 }
+
+export async function setIncludeSource(
+  conversation: MyConversation,
+  ctx: MyContext
+) {
+  const newCtx = await conversation.waitFor('msg:text')
+  const booleanAnswer = newCtx.message?.text === 'yes' ? true : false 
+
+  conversation.session.includeSource = booleanAnswer
+
+  if (booleanAnswer) {
+    await ctx.reply(`Now your links sended to me, will include the source where they came from 😸👍`, {
+      reply_markup: mainKeyboardLayout,
+    })
+  } else {
+    await ctx.reply(`Your links won't include the source, and that's absolutely normal 😸👍`, {
+      reply_markup: mainKeyboardLayout,
+    })
+  }
+}

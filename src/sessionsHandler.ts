@@ -23,6 +23,7 @@ const storage = supabaseAdapter({
 interface SessionData {
   apiToken: string
   defaultLabel: string
+  includeSource: boolean
 }
 
 export type MyContext = Context &
@@ -32,7 +33,8 @@ export type MyContext = Context &
 function initial(): SessionData {
   return {
     apiToken: '',
-    defaultLabel: ''
+    defaultLabel: '',
+    includeSource: false
   }
 }
 

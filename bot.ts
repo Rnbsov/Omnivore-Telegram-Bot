@@ -15,6 +15,7 @@ import { cancelMenu } from './src/menus.ts'
 import { OmnivoreApi } from './src/omnivore/api.ts'
 import { MyContext, sessionHandler } from './src/sessionsHandler.ts'
 import { inlineQuery } from "./src/inlineQuery.ts";
+import { slashCommandsListener } from './src/slashCommands.ts'
 
 await load({ export: true })
 
@@ -37,13 +38,16 @@ bot.use(cancelMenu)
 // inline query
 bot.use(inlineQuery)
 
+// slash commands handler
+bot.use(slashCommandsListener)
+
 // handlers
 bot.on('message:entities:url', async ctx => {
   const token = ctx.session.apiToken
 
   const api = new OmnivoreApi(token)
 
-  await api.saveUrl(ctx.message.text || '')
+  await api.saveUrl(ctx.message.text || '', [{name: 'sleep'}])
 
   if (api.addedEntriesCount === 1) {
     await ctx.reply('Successfully added link to Omnivore! 😸👍')

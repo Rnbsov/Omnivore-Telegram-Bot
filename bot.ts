@@ -13,7 +13,6 @@ import {
   updateToken,
 } from './src/conversations.ts'
 import { cancelMenu } from './src/menus.ts'
-import { cancelMenu } from './src/menus.ts'
 import { OmnivoreApi } from './src/omnivore/api.ts'
 import { MyContext, sessionHandler } from './src/sessionsHandler.ts'
 import { inlineQuery } from "./src/inlineQuery.ts";
@@ -51,7 +50,6 @@ bot.use(slashCommandsListener)
 
 // handlers
 bot.on('message:entities:url', async ctx => {
-  const source = ctx.msg?.forward_origin
   const source = ctx.msg?.forward_origin
   const token = ctx.session.apiToken
 

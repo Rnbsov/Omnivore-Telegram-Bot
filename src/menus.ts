@@ -10,3 +10,14 @@ export const cancelMenu = new Menu<MyContext>('Cancel')
   }
   )
   .row()
+
+  export const cancelMenuAndResetLabel = new Menu<MyContext>('Cancel')
+  .text('Cancel', ctx => {
+    ctx.reply('canceled 👌', { reply_markup: mainKeyboardLayout })
+    ctx.conversation.exit()
+  },
+  )
+  .text('Reset label', ctx => {
+    ctx.reply('🍃 from now on there is no default label for links')
+  })
+  .row()

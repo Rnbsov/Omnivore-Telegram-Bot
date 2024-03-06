@@ -9,6 +9,7 @@ import { conversations } from 'https://deno.land/x/grammy_conversations@v1.2.0/m
 import {
   askApiKey,
   saveBunchUrls,
+  setDefaultLabel,
   updateToken,
 } from './src/conversations.ts'
 import { cancelMenu } from './src/menus.ts'
@@ -16,6 +17,7 @@ import { OmnivoreApi } from './src/omnivore/api.ts'
 import { MyContext, sessionHandler } from './src/sessionsHandler.ts'
 import { inlineQuery } from "./src/inlineQuery.ts";
 import { slashCommandsListener } from './src/slashCommands.ts'
+import { cancelMenuAndResetLabel } from "./src/menus.ts";
 
 await load({ export: true })
 
@@ -31,9 +33,11 @@ bot.use(conversations())
 bot.use(createConversation(askApiKey))
 bot.use(createConversation(saveBunchUrls))
 bot.use(createConversation(updateToken))
+bot.use(createConversation(setDefaultLabel))
 
 // Menu
 bot.use(cancelMenu)
+bot.use(cancelMenuAndResetLabel)
 
 // inline query
 bot.use(inlineQuery)

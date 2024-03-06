@@ -22,6 +22,6 @@ export function getSourceLabel(source: MessageOrigin) {
         break;
     }
 
-    return sourceLabel
+    return sourceLabel || {}
   }
 }

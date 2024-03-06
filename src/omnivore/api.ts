@@ -28,12 +28,13 @@ export class OmnivoreApi implements OmnivoreApiInterface {
     this.apiToken = apiToken
   }
 
-  async saveUrl(url: string) {
+  async saveUrl(url: string, labels: [{name: string | undefined}]) {
     const variables = {
       input: {
         clientRequestId: globalThis.crypto.randomUUID(),
         source: 'api',
         url,
+        labels
       },
     }
 

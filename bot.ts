@@ -51,7 +51,10 @@ bot.on('message:entities:url', async ctx => {
 
   const api = new OmnivoreApi(token)
 
-  await api.saveUrl(ctx.message.text || '', [{name: 'sleep'}])
+  const defaultLabel = ctx.session.defaultLabel ? { name: ctx.session.defaultLabel } : {};
+  const labels = [defaultLabel]
+
+  await api.saveUrl(ctx.message.text || '', labels)
 
   if (api.addedEntriesCount === 1) {
     await ctx.reply('Successfully added link to Omnivore! 😸👍')

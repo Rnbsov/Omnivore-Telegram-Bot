@@ -13,6 +13,7 @@ import {
   updateToken,
 } from './src/conversations.ts'
 import { cancelMenu } from './src/menus.ts'
+import { cancelMenu } from './src/menus.ts'
 import { OmnivoreApi } from './src/omnivore/api.ts'
 import { MyContext, sessionHandler } from './src/sessionsHandler.ts'
 import { inlineQuery } from "./src/inlineQuery.ts";
@@ -51,13 +52,20 @@ bot.use(slashCommandsListener)
 // handlers
 bot.on('message:entities:url', async ctx => {
   const source = ctx.msg?.forward_origin
+  const source = ctx.msg?.forward_origin
   const token = ctx.session.apiToken
 
   const api = new OmnivoreApi(token)
   // TODO: regex to retrieve first link from message
+  // TODO: regex to retrieve first link from message
 
   const defaultLabel = ctx.session.defaultLabel ? { name: ctx.session.defaultLabel } : {};
   const labels = [defaultLabel]
+  
+  if (source && ctx.session.includeSource) {
+    const sourceLabel = getSourceLabel(source);
+    labels.push(sourceLabel);
+  }
   
   if (source && ctx.session.includeSource) {
     const sourceLabel = getSourceLabel(source);

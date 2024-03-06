@@ -12,13 +12,12 @@ import {
   setDefaultLabel,
   updateToken,
 } from './src/conversations.ts'
-import { cancelMenu } from './src/menus.ts'
+import { cancelMenu, includeSourceChoiceMenu } from './src/menus.ts'
 import { OmnivoreApi } from './src/omnivore/api.ts'
 import { MyContext, sessionHandler } from './src/sessionsHandler.ts'
 import { inlineQuery } from "./src/inlineQuery.ts";
 import { slashCommandsListener } from './src/slashCommands.ts'
 import { cancelMenuAndResetLabel } from "./src/menus.ts";
-import { setIncludeSource } from "./src/conversations.ts";
 
 await load({ export: true })
 
@@ -35,11 +34,11 @@ bot.use(createConversation(askApiKey))
 bot.use(createConversation(saveBunchUrls))
 bot.use(createConversation(updateToken))
 bot.use(createConversation(setDefaultLabel))
-bot.use(createConversation(setIncludeSource))
 
 // Menu
 bot.use(cancelMenu)
 bot.use(cancelMenuAndResetLabel)
+bot.use(includeSourceChoiceMenu)
 
 // inline query
 bot.use(inlineQuery)

@@ -21,3 +21,21 @@ export const cancelMenuAndResetLabel = new Menu<MyContext>(
 
     ctx.reply('🍃 from now on there is no default label for links')
   })
+
+export const includeSourceChoiceMenu = new Menu<MyContext>(
+  'includeSourceChoiceMenu'
+)
+  .text('yes', ctx => {
+    ctx.session.includeSource = true
+    
+    ctx.reply(`Now your links sended to me, will include the source where they came from 😸👍`, {
+      reply_markup: mainKeyboardLayout,
+    })
+  })
+  .text('no', ctx => {
+    ctx.session.includeSource = false
+
+    ctx.reply(`Your links won't include the source, and that's absolutely normal 😸👍`, {
+      reply_markup: mainKeyboardLayout,
+    })
+  })

@@ -15,7 +15,7 @@ slashCommandsListener.hears('/set_default_label', async ctx => {
   await ctx.conversation.enter('setDefaultLabel')
 })
 
-slashCommandsListener.hears('/set_include_source', async ctx => {
+slashCommandsListener.hears('/set_include_source', ctx => {
   ctx.reply(
     'Do you want to include label from what channel or contact you\'ve saved the article?', {
       reply_markup: includeSourceChoiceMenu

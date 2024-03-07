@@ -54,7 +54,7 @@ bot.on('message:entities:url', async ctx => {
   const token = ctx.session.apiToken
 
   const api = new OmnivoreApi(token)
-  // TODO: regex to retrieve first link from message
+
   // TODO: regex to retrieve first link from message
 
   const defaultLabel = ctx.session.defaultLabel ? { name: ctx.session.defaultLabel } : {};

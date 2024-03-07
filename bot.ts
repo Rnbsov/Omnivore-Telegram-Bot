@@ -66,19 +66,14 @@ bot.on('message:entities:url', async ctx => {
     const sourceLabel = getSourceLabel(source);
     labels.push(sourceLabel);
   }
-  
-  if (source && ctx.session.includeSource) {
-    const sourceLabel = getSourceLabel(source);
-    labels.push(sourceLabel);
-  }
 
   await api.saveUrl(url, labels)
 
-  if (api.addedEntriesCount === 1) {
-    await ctx.reply('Successfully added link to Omnivore! 😸👍')
-  } else {
-    await ctx.reply('Failed to add the link. 😿')
-  }
+  const feedback = api.addedEntriesCount === 1
+    ? 'Successfully added link to Omnivore! 😸👍'
+    : 'Failed to add the link. 😿'
+
+    await ctx.reply(feedback)
 })
 
 bot.command('start', async ctx => {

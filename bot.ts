@@ -55,7 +55,9 @@ bot.on('message:entities:url', async ctx => {
 
   const api = new OmnivoreApi(token)
 
-  // TODO: regex to retrieve first link from message
+  // retrieve first url from message
+  const urlMatch = ctx.message.text.match(/(?:https?:\/\/|www\.)\S+?(?=\s|$)/);
+  const url = urlMatch ? urlMatch[0] : '';
 
   const defaultLabel = ctx.session.defaultLabel ? { name: ctx.session.defaultLabel } : {};
   const labels = [defaultLabel]
@@ -70,7 +72,7 @@ bot.on('message:entities:url', async ctx => {
     labels.push(sourceLabel);
   }
 
-  await api.saveUrl(ctx.message.text || '', labels)
+  await api.saveUrl(url, labels)
 
   if (api.addedEntriesCount === 1) {
     await ctx.reply('Successfully added link to Omnivore! 😸👍')

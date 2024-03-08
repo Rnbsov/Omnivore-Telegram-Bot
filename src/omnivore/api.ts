@@ -160,7 +160,6 @@ export class OmnivoreApi implements OmnivoreApiInterface {
     // get file blob
     const fileDownloadUrl = `https://api.telegram.org/file/bot${Deno.env.get('BOT_TOKEN')}/${file.file_path}`
 
-    console.log("🚀 ~ OmnivoreApi ~ uploadFile ~ fileDownloadUrl:", fileDownloadUrl)
     const fileDownloadUrlResponse = await fetch(fileDownloadUrl)
 
     if (!fileDownloadUrlResponse.ok) {

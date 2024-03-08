@@ -9,6 +9,7 @@ import {
   searchQuery,
 } from './graphql.ts'
 import { InlineQueryResultBuilder } from 'https://deno.land/x/grammy@v1.20.3/mod.ts'
+import { File } from "https://deno.land/x/grammy_types@v3.4.6/message.ts";
 
 interface OmnivoreApiInterface {
   apiToken: string
@@ -148,5 +149,76 @@ export class OmnivoreApi implements OmnivoreApiInterface {
         nextOffset: ''
       }
     }
+  }
+
+  // private async getSignedUploadUrl(path) {
+    
+  //   return uploadSignedUrl
+  // }
+
+  async uploadFile(file: File, fileType: any) {
+    // get file blob
+    const fileDownloadUrl = `https://api.telegram.org/file/bot${Deno.env.get('BOT_TOKEN')}/${file.file_path}`
+
+    const fileDownloadUrlResponse = await fetch(fileDownloadUrl)
+
+    if (!fileDownloadUrlResponse.ok) {
+      throw new Error('Something went wrong, please try again after a while')
+    }
+
+   const pdfBlob = await fileDownloadUrlResponse.blob();
+
+    //  getSignedUploadUrl
+    const response = await fetch(graphqlEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'fb518687-1ade-497d-968a-f3cc2d4d3fa3',
+      },
+      body: JSON.stringify({
+        query: `
+        mutation UploadFileRequest($input: UploadFileRequestInput!) {
+          uploadFileRequest(input: $input) {
+            ... on UploadFileRequestError {
+              errorCodes
+            }
+            ... on UploadFileRequestSuccess {
+              id
+              uploadSignedUrl
+              createdPageId
+            }
+          }
+        }
+      `,
+        variables: {
+          input: {
+            url: `file://local/${file.file_id}/${file.file_path}`,
+            contentType: fileType,
+            createPageEntry: true,
+            clientRequestId: globalThis.crypto.randomUUID()
+          }
+        }
+      }),
+    })
+
+    const result = await response.json();
+
+    if(result.data.uploadFileRequest?.errorCodes) {
+      console.log(result.data.uploadFileRequest.errorCodes)
+
+      throw new Error('Failed to get signedUrl')
+    }
+
+    const { uploadSignedUrl } = result?.data?.uploadFileRequest
+
+    const fileUploadResponse = await fetch(uploadSignedUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': pdfBlob.type,
+      },
+      body: pdfBlob
+    })
+
+    console.log(await fileUploadResponse.text())
   }
 }

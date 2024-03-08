@@ -1,4 +1,4 @@
-type label = {
+export type label = {
   name: string
 }
 

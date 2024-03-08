@@ -9,7 +9,7 @@ import {
   searchQuery,
 } from './graphql.ts'
 import { InlineQueryResultBuilder } from 'https://deno.land/x/grammy@v1.20.3/mod.ts'
-import { UrlInfo } from "../utils/types.ts";
+import { UrlInfo, label } from "../types.ts";
 
 interface OmnivoreApiInterface {
   apiToken: string
@@ -29,7 +29,7 @@ export class OmnivoreApi implements OmnivoreApiInterface {
     this.apiToken = apiToken
   }
 
-  async saveUrl(url: string, labels: string[]) {
+  async saveUrl(url: string, labels: label[]) {
     const variables = {
       input: {
         clientRequestId: globalThis.crypto.randomUUID(),

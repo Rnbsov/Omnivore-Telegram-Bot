@@ -1,4 +1,4 @@
-export type ParsedUrl = {
+export type UrlInfo = {
   url: string
   labels: string[]
 }

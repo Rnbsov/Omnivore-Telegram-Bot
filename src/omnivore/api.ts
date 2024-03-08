@@ -9,6 +9,7 @@ import {
   searchQuery,
 } from './graphql.ts'
 import { InlineQueryResultBuilder } from 'https://deno.land/x/grammy@v1.20.3/mod.ts'
+import { UrlInfo } from "../utils/types.ts";
 
 interface OmnivoreApiInterface {
   apiToken: string
@@ -28,7 +29,7 @@ export class OmnivoreApi implements OmnivoreApiInterface {
     this.apiToken = apiToken
   }
 
-  async saveUrl(url: string, labels: [{name: string | undefined}]) {
+  async saveUrl(url: string, labels: string[]) {
     const variables = {
       input: {
         clientRequestId: globalThis.crypto.randomUUID(),
@@ -70,13 +71,14 @@ export class OmnivoreApi implements OmnivoreApiInterface {
     }
   }
 
-  async processUrls(urls: string[], startIndex = 0) {
+  async processUrls(urls: UrlInfo[], startIndex = 0) {
     const batchSize = 50
     const remainingUrls = urls.slice(startIndex)
 
     for (let i = 0; i <= batchSize && i < remainingUrls.length; i++) {
-      const url = remainingUrls[i]
-      await this.saveUrl(url)
+      const url = remainingUrls[i].url
+      const urlLabels = remainingUrls[i].labels
+      await this.saveUrl(url, urlLabels)
     }
 
     const nextIndex = startIndex + batchSize + 1

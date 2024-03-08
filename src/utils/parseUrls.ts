@@ -1,6 +1,6 @@
-import { ParsedUrl } from './types.ts'
+import { UrlInfo } from './types.ts'
 
-export function parseUrls(urls: string): ParsedUrl[] {
+export function parseUrls(urls: string): UrlInfo[] {
   const regex = /((?:https?:\/\/|www\.)[^ \n\r]+)(.*)/g
 
   let match

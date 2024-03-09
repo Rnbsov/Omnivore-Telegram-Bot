@@ -16,6 +16,7 @@ import { cancelMenu } from './src/menus.ts'
 import { OmnivoreApi } from './src/omnivore/api.ts'
 import { MyContext, sessionHandler } from './src/sessionsHandler.ts'
 import { inlineQuery } from "./src/inlineQuery.ts";
+import { fileListener } from "./src/files.ts";
 import { slashCommandsListener } from './src/slashCommands.ts'
 import { cancelMenuAndResetLabel } from "./src/menus.ts";
 import { getUrlAndLabels } from "./src/utils/getUrlAndLabels.ts";
@@ -44,6 +45,9 @@ bot.use(includeSourceChoiceMenu)
 
 // inline query
 bot.use(inlineQuery)
+
+// file handling
+bot.use(fileListener)
 
 // slash commands handler
 bot.use(slashCommandsListener)

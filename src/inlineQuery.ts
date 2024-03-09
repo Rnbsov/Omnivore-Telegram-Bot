@@ -1,4 +1,4 @@
-import { Composer } from 'https://deno.land/x/grammy@v1.20.3/mod.ts'
+import { Composer } from 'https://deno.land/x/grammy@v1.21.1/mod.ts'
 import { OmnivoreApi } from './omnivore/api.ts'
 import { MyContext } from './sessionsHandler.ts'
 

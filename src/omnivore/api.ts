@@ -8,7 +8,8 @@ import {
   graphqlEndpoint,
   searchQuery,
 } from './graphql.ts'
-import { InlineQueryResultBuilder } from 'https://deno.land/x/grammy@v1.20.3/mod.ts'
+import { InlineQueryResultBuilder } from 'https://deno.land/x/grammy@v1.21.1/mod.ts'
+import { Label, ProcessUrlsParams } from "../types.ts";
 
 interface OmnivoreApiInterface {
   apiToken: string
@@ -28,12 +29,13 @@ export class OmnivoreApi implements OmnivoreApiInterface {
     this.apiToken = apiToken
   }
 
-  async saveUrl(url: string) {
+  async saveUrl(url: string, labels: Label[]) {
     const variables = {
       input: {
         clientRequestId: globalThis.crypto.randomUUID(),
         source: 'api',
         url,
+        labels
       },
     }
 
@@ -69,13 +71,18 @@ export class OmnivoreApi implements OmnivoreApiInterface {
     }
   }
 
-  async processUrls(urls: string[], startIndex = 0) {
+  async processUrls({ urls, additionalLabels, startIndex = 0 }: ProcessUrlsParams) {
     const batchSize = 50
     const remainingUrls = urls.slice(startIndex)
 
     for (let i = 0; i <= batchSize && i < remainingUrls.length; i++) {
-      const url = remainingUrls[i]
-      await this.saveUrl(url)
+      const url = remainingUrls[i].url
+      const urlLabels = remainingUrls[i].labels
+
+      // add additional labels to each url
+      additionalLabels?.map((label) => urlLabels.push(label))
+
+      await this.saveUrl(url, urlLabels)
     }
 
     const nextIndex = startIndex + batchSize + 1
@@ -84,7 +91,7 @@ export class OmnivoreApi implements OmnivoreApiInterface {
       await new Promise(resolve =>
         setTimeout(resolve, OmnivoreApi.delayBetweenRequests)
       )
-      await this.processUrls(urls, nextIndex)
+      await this.processUrls({urls, startIndex: nextIndex})
     }
   }
 

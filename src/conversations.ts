@@ -53,7 +53,7 @@ export async function saveBunchUrls(
 
   const api = new OmnivoreApi(token)
 
-  await api.processUrls(urlsArray)
+  await api.processUrls({urls: urlsArray})
   await ctx.reply(
     `Successfully added ${api.addedEntriesCount} of ${urlsArray.length} links!\nFailed to add ${api.failedEntriesCount} links.`,
     {
@@ -75,3 +75,19 @@ export async function updateToken(
     reply_markup: mainKeyboardLayout,
   })
 }
+
+export async function setDefaultLabel(
+  conversation: MyConversation,
+  ctx: MyContext
+) {
+  const newCtx = await conversation.waitFor('msg:text')
+  const label = newCtx.message?.text
+
+  conversation.session.defaultLabel = label || ctx.session.defaultLabel
+
+  await ctx.reply(`You've Successfully set the label ${label} 🎉`, {
+    reply_markup: mainKeyboardLayout,
+  })
+}
+
+

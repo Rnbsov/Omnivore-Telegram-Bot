@@ -8,7 +8,6 @@ import {
   graphqlEndpoint,
   searchQuery,
 } from './graphql.ts'
-import { InlineQueryResultBuilder } from 'https://deno.land/x/grammy@v1.20.3/mod.ts'
 import { File } from "https://deno.land/x/grammy_types@v3.4.6/message.ts";
 import { InlineQueryResultBuilder } from 'https://deno.land/x/grammy@v1.21.1/mod.ts'
 import { Label, ProcessUrlsParams } from "../types.ts";

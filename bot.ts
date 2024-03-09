@@ -18,10 +18,8 @@ import { MyContext, sessionHandler } from './src/sessionsHandler.ts'
 import { inlineQuery } from "./src/inlineQuery.ts";
 import { slashCommandsListener } from './src/slashCommands.ts'
 import { cancelMenuAndResetLabel } from "./src/menus.ts";
-import { getSourceLabel } from "./src/utils/getSourceLabel.ts";
+import { getUrlAndLabels } from "./src/utils/getUrlAndLabels.ts";
 import { includeSourceChoiceMenu } from "./src/menus.ts";
-import { getDefaultLabel } from "./src/utils/getDefaultLabel.ts";
-import { Label } from './src/types.ts'
 
 await load({ export: true })
 
@@ -53,29 +51,16 @@ bot.use(slashCommandsListener)
 // handlers
 bot.on('message:entities:url', async ctx => {
   const source = ctx.msg?.forward_origin
+  const message = ctx.message.text
+
+  // retrieve stuff from session
   const token = ctx.session.apiToken
+  const defaultLabel = ctx.session.defaultLabel
+  const includeSource = ctx.session.includeSource
 
   const api = new OmnivoreApi(token)
 
-  // retrieve first url from message
-  const urlMatch = ctx.message.text.match(/(?:https?:\/\/|www\.)\S+?(?=\s|$)/);
-  const url = urlMatch ? urlMatch[0] : '';
-
-  const labels: Label[] = []
-
-  const defaultLabel = getDefaultLabel(ctx.session.defaultLabel)
-
-  if (defaultLabel.name) {
-    labels.push(defaultLabel)
-  }
-  
-  if (source && ctx.session.includeSource) {
-    const sourceLabel = getSourceLabel(source);
-
-    if (sourceLabel) {
-      labels.push(sourceLabel)
-    }
-  }
+  const {url, labels} = getUrlAndLabels(message, source, includeSource, defaultLabel)
 
   await api.saveUrl(url, labels)
 

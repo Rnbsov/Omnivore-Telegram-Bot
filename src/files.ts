@@ -31,7 +31,7 @@ fileListener.on('message:document', async (ctx, next) => {
     const api = new OmnivoreApi(token)
 
     await ctx.reply(
-      `Started processing your file 😸👍 \n\n >${file.file_name}`,
+      `Started processing your file 😸👍 \n\n ${file.file_name}`,
       { parse_mode: 'MarkdownV2' }
     )
 

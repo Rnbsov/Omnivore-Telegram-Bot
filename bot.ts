@@ -3,12 +3,13 @@ import {
   Bot,
   GrammyError,
   HttpError,
-} from 'https://deno.land/x/grammy@v1.20.3/mod.ts'
+} from 'https://deno.land/x/grammy@v1.21.1/mod.ts'
 import { createConversation } from 'https://deno.land/x/grammy_conversations@v1.2.0/conversation.ts'
 import { conversations } from 'https://deno.land/x/grammy_conversations@v1.2.0/mod.ts'
 import {
   askApiKey,
   saveBunchUrls,
+  setDefaultLabel,
   updateToken,
 } from './src/conversations.ts'
 import { cancelMenu } from './src/menus.ts'
@@ -16,6 +17,10 @@ import { OmnivoreApi } from './src/omnivore/api.ts'
 import { MyContext, sessionHandler } from './src/sessionsHandler.ts'
 import { inlineQuery } from "./src/inlineQuery.ts";
 import { fileListener } from "./src/files.ts";
+import { slashCommandsListener } from './src/slashCommands.ts'
+import { cancelMenuAndResetLabel } from "./src/menus.ts";
+import { getUrlAndLabels } from "./src/utils/getUrlAndLabels.ts";
+import { includeSourceChoiceMenu } from "./src/menus.ts";
 
 await load({ export: true })
 
@@ -31,9 +36,12 @@ bot.use(conversations())
 bot.use(createConversation(askApiKey))
 bot.use(createConversation(saveBunchUrls))
 bot.use(createConversation(updateToken))
+bot.use(createConversation(setDefaultLabel))
 
 // Menu
 bot.use(cancelMenu)
+bot.use(cancelMenuAndResetLabel)
+bot.use(includeSourceChoiceMenu)
 
 // inline query
 bot.use(inlineQuery)
@@ -41,19 +49,24 @@ bot.use(inlineQuery)
 // file handling
 bot.use(fileListener)
 
+// slash commands handler
+bot.use(slashCommandsListener)
+
 // handlers
 bot.on('message:entities:url', async ctx => {
+  // retrieve stuff from session
   const token = ctx.session.apiToken
-
   const api = new OmnivoreApi(token)
 
-  await api.saveUrl(ctx.message.text || '')
+  const {url, labels} = getUrlAndLabels(ctx)
 
-  if (api.addedEntriesCount === 1) {
-    await ctx.reply('Successfully added link to Omnivore! 😸👍')
-  } else {
-    await ctx.reply('Failed to add the link. 😿')
-  }
+  await api.saveUrl(url, labels)
+
+  const feedback = api.addedEntriesCount === 1
+    ? 'Successfully added link to Omnivore! 😸👍'
+    : 'Failed to add the link. 😿'
+
+    await ctx.reply(feedback)
 })
 
 bot.command('start', async ctx => {

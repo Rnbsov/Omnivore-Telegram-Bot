@@ -1,4 +1,4 @@
-import { MessageOrigin } from "https://deno.land/x/grammy_types@v3.4.6/message.ts";
+import { MessageOrigin } from "https://deno.land/x/grammy_types@v3.5.2/message.ts";
 
 export function getSourceLabel(source: MessageOrigin) {
   let sourceLabel = { name: '' }

@@ -3,7 +3,7 @@ import {
   Bot,
   GrammyError,
   HttpError,
-} from 'https://deno.land/x/grammy@v1.20.3/mod.ts'
+} from 'https://deno.land/x/grammy@v1.21.1/mod.ts'
 import { createConversation } from 'https://deno.land/x/grammy_conversations@v1.2.0/conversation.ts'
 import { conversations } from 'https://deno.land/x/grammy_conversations@v1.2.0/mod.ts'
 import {
@@ -50,17 +50,11 @@ bot.use(slashCommandsListener)
 
 // handlers
 bot.on('message:entities:url', async ctx => {
-  const source = ctx.msg?.forward_origin
-  const message = ctx.message.text
-
   // retrieve stuff from session
   const token = ctx.session.apiToken
-  const defaultLabel = ctx.session.defaultLabel
-  const includeSource = ctx.session.includeSource
-
   const api = new OmnivoreApi(token)
 
-  const {url, labels} = getUrlAndLabels(message, source, includeSource, defaultLabel)
+  const {url, labels} = getUrlAndLabels(ctx)
 
   await api.saveUrl(url, labels)
 

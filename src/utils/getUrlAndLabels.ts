@@ -3,10 +3,19 @@ import { getDefaultLabel } from "./getDefaultLabel.ts";
 import { parseUrls } from "./parseUrls.ts";
 import { startsWithUrl } from "./startsWithUrl.ts";
 import { Label } from '../types.ts'
-import { MessageOrigin } from "https://deno.land/x/grammy_types@v3.4.6/message.ts";
+import { type Filter } from "https://deno.land/x/grammy@v1.21.1/mod.ts"
+import { MyContext } from '../sessionsHandler.ts'
 
-export function getUrlAndLabels(message: string, source: MessageOrigin | undefined, sessionIncludeSource: boolean, sessionDefaultLabel: string) {
+export function getUrlAndLabels(ctx: Filter<MyContext, 'message:entities:url'>) {
   let url, labels: Label[]
+  
+  // retrieving information from ctx 
+  const message = ctx.message.text
+  const source = ctx.msg?.forward_origin
+
+  // retrieving information from session 
+  const sessionIncludeSource = ctx.session.includeSource
+  const sessionDefaultLabel = ctx.session.defaultLabel
 
   // parse url from the message
   if (startsWithUrl(message)) {

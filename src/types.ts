@@ -1,8 +1,15 @@
-export type label = {
+export type Label = {
   name: string
 }
 
 export type UrlInfo = {
   url: string
-  labels: label[]
+  labels: Label[]
 }
+
+
+export type ProcessUrlsParams = {
+  urls: UrlInfo[];
+  additionalLabels?: Label[];
+  startIndex?: number;
+};

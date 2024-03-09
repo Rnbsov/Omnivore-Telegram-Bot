@@ -1,7 +1,7 @@
 import { MessageOrigin } from "https://deno.land/x/grammy_types@v3.4.6/message.ts";
 
 export function getSourceLabel(source: MessageOrigin) {
-  let sourceLabel
+  let sourceLabel = { name: '' }
   
   if (source) {
     switch (source.type) {
@@ -17,11 +17,8 @@ export function getSourceLabel(source: MessageOrigin) {
       case 'chat':
         sourceLabel = { name: source.author_signature || '' } 
         break
-      default:
-        sourceLabel = {}
-        break;
     }
 
-    return sourceLabel || {}
+    return sourceLabel
   }
 }

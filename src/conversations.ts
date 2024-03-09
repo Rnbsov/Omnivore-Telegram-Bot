@@ -53,7 +53,7 @@ export async function saveBunchUrls(
 
   const api = new OmnivoreApi(token)
 
-  await api.processUrls(urlsArray)
+  await api.processUrls({urls: urlsArray})
   await ctx.reply(
     `Successfully added ${api.addedEntriesCount} of ${urlsArray.length} links!\nFailed to add ${api.failedEntriesCount} links.`,
     {

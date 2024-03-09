@@ -20,6 +20,8 @@ import { slashCommandsListener } from './src/slashCommands.ts'
 import { cancelMenuAndResetLabel } from "./src/menus.ts";
 import { getSourceLabel } from "./src/utils/getSourceLabel.ts";
 import { includeSourceChoiceMenu } from "./src/menus.ts";
+import { getDefaultLabel } from "./src/utils/getDefaultLabel.ts";
+import { Label } from './src/types.ts'
 
 await load({ export: true })
 
@@ -59,12 +61,20 @@ bot.on('message:entities:url', async ctx => {
   const urlMatch = ctx.message.text.match(/(?:https?:\/\/|www\.)\S+?(?=\s|$)/);
   const url = urlMatch ? urlMatch[0] : '';
 
-  const defaultLabel = ctx.session.defaultLabel ? { name: ctx.session.defaultLabel } : {};
-  const labels = [defaultLabel]
+  const labels: Label[] = []
+
+  const defaultLabel = getDefaultLabel(ctx.session.defaultLabel)
+
+  if (defaultLabel.name) {
+    labels.push(defaultLabel)
+  }
   
   if (source && ctx.session.includeSource) {
     const sourceLabel = getSourceLabel(source);
-    labels.push(sourceLabel);
+
+    if (sourceLabel) {
+      labels.push(sourceLabel)
+    }
   }
 
   await api.saveUrl(url, labels)

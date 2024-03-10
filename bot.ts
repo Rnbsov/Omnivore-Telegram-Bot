@@ -21,11 +21,16 @@ import { slashCommandsListener } from './src/slashCommands.ts'
 import { cancelMenuAndResetLabel } from "./src/menus.ts";
 import { getUrlAndLabels } from "./src/utils/getUrlAndLabels.ts";
 import { includeSourceChoiceMenu } from "./src/menus.ts";
+import { Hono } from "https://deno.land/x/hono@v4.0.10/mod.ts"
+import { webhookCallback } from "https://deno.land/x/grammy@v1.21.1/mod.ts";
 
 await load({ export: true })
 
+
+const app = new Hono()
 const bot = new Bot<MyContext>(Deno.env.get('BOT_TOKEN') || '')
 
+app.post('/', webhookCallback(bot, 'hono'))
 
 // sessions
 bot.use(sessionHandler())
@@ -109,21 +114,4 @@ You can get new by following this guide [Getting an API token](https://docs.omni
   )
 
   await ctx.conversation.enter('updateToken')
-})
-
-bot.start()
-
-bot.catch(err => {
-  const ctx = err.ctx
-  console.error(
-    `Error while handling update ${ctx.update.update_id}:`
-  )
-  const e = err.error
-  if (e instanceof GrammyError) {
-    console.error('Error in request:', e.description)
-  } else if (e instanceof HttpError) {
-    console.error('Could not contact Telegram:', e)
-  } else {
-    console.error('Unknown error:', e)
-  }
 })

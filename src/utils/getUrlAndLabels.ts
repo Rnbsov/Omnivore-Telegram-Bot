@@ -19,7 +19,14 @@ export function getUrlAndLabels(ctx: Filter<MyContext, 'message:entities:url'>) 
 
   // parse url from the message
   if (startsWithUrl(message)) {
-    ({ url, labels } = parseUrls(message)[0]);
+    ;({ url, labels } = parseUrls(message)[0])
+  } else if (ctx.entities('text_link')) {
+    // handle case when user sends a message with text formatted link
+    const linkEntity = ctx.entities('text_link').find((entity) => entity.type === 'text_link')
+    if (linkEntity && linkEntity.url) {
+      url = linkEntity.url
+    }
+    labels = []
   } else {
     // retrieve the first url from the message
     const urlMatch = message.match(/(?:https?:\/\/|www\.)\S+?(?=\s|$)/);

@@ -6,7 +6,7 @@ export function getSourceLabel(source: MessageOrigin) {
   if (source) {
     switch (source.type) {
       case 'user':
-        sourceLabel = { name: `${source.sender_user.first_name} ${source.sender_user.last_name}` }
+        sourceLabel = { name: `${source.sender_user.first_name} ${source.sender_user.last_name || ''}` }
         break;
       case 'hidden_user':
         sourceLabel = { name: source.sender_user_name } 

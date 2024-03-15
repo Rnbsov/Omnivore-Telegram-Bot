@@ -20,18 +20,20 @@ export function getUrlAndLabels(ctx: Filter<MyContext, 'message:entities:url'>) 
   // parse url from the message
   if (startsWithUrl(message)) {
     ;({ url, labels } = parseUrls(message)[0])
-  } else if (ctx.entities('text_link')) {
+  } else if (ctx.entities('text_link').length > 0) {
     // handle case when user sends a message with text formatted link
-    const linkEntity = ctx.entities('text_link').find((entity) => entity.type === 'text_link')
+    const linkEntity = ctx.entities('text_link')[0]
     if (linkEntity && linkEntity.url) {
       url = linkEntity.url
     }
     labels = []
   } else {
-    // retrieve the first url from the message
-    const urlMatch = message.match(/(?:https?:\/\/|www\.)\S+?(?=\s|$)/);
-    url = urlMatch ? urlMatch[0] : '';
-    labels = [];
+    // retrieve the first url from the message/post
+    const urlEntity = ctx.entities('url')[0]
+    if (urlEntity && urlEntity.text) {
+      url = urlEntity.text
+    }
+    labels = []
   }
 
   // add default label

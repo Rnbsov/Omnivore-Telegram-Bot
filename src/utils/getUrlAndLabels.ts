@@ -20,7 +20,7 @@ export function getUrlAndLabels(ctx: Filter<MyContext, 'message:entities:url'>) 
   // parse url from the message
   if (startsWithUrl(message)) {
     ;({ url, labels } = parseUrls(message)[0])
-  } else if (ctx.entities('text_link')) {
+  } else if (ctx.entities('text_link').length > 0) {
     // handle case when user sends a message with text formatted link
     const linkEntity = ctx.entities('text_link').find((entity) => entity.type === 'text_link')
     if (linkEntity && linkEntity.url) {

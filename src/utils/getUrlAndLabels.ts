@@ -28,10 +28,12 @@ export function getUrlAndLabels(ctx: Filter<MyContext, 'message:entities:url'>) 
     }
     labels = []
   } else {
-    // retrieve the first url from the message
-    const urlMatch = message.match(/(?:https?:\/\/|www\.)\S+?(?=\s|$)/);
-    url = urlMatch ? urlMatch[0] : '';
-    labels = [];
+    // retrieve the first url from the message/post
+    const urlEntity = ctx.entities('url').find((entity) => entity.type === 'url')
+    if (urlEntity && urlEntity.text) {
+      url = urlEntity.text
+    }
+    labels = []
   }
 
   // add default label

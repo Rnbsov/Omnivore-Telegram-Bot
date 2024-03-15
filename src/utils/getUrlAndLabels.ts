@@ -22,14 +22,14 @@ export function getUrlAndLabels(ctx: Filter<MyContext, 'message:entities:url'>) 
     ;({ url, labels } = parseUrls(message)[0])
   } else if (ctx.entities('text_link').length > 0) {
     // handle case when user sends a message with text formatted link
-    const linkEntity = ctx.entities('text_link').find((entity) => entity.type === 'text_link')
+    const linkEntity = ctx.entities('text_link')[0]
     if (linkEntity && linkEntity.url) {
       url = linkEntity.url
     }
     labels = []
   } else {
     // retrieve the first url from the message/post
-    const urlEntity = ctx.entities('url').find((entity) => entity.type === 'url')
+    const urlEntity = ctx.entities('url')[0]
     if (urlEntity && urlEntity.text) {
       url = urlEntity.text
     }

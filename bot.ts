@@ -8,6 +8,7 @@ import { createConversation } from 'https://deno.land/x/grammy_conversations@v1.
 import { conversations } from 'https://deno.land/x/grammy_conversations@v1.2.0/mod.ts'
 import {
   askApiKey,
+  forwardPostLabels,
   saveBunchUrls,
   setDefaultLabel,
   updateToken,
@@ -37,6 +38,7 @@ bot.use(createConversation(askApiKey))
 bot.use(createConversation(saveBunchUrls))
 bot.use(createConversation(updateToken))
 bot.use(createConversation(setDefaultLabel))
+bot.use(createConversation(forwardPostLabels))
 
 // Menu
 bot.use(cancelMenu)
@@ -109,6 +111,10 @@ You can get new by following this guide [Getting an API token](https://docs.omni
   )
 
   await ctx.conversation.enter('updateToken')
+})
+
+bot.on('message:text', async ctx => {
+  await ctx.conversation.enter('forwardPostLabels')
 })
 
 bot.start()

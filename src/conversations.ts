@@ -3,6 +3,8 @@ import { MyContext } from './sessionsHandler.ts'
 import { mainKeyboardLayout } from './keyboards.ts'
 import { OmnivoreApi } from './omnivore/api.ts'
 import { parseUrls } from './utils/parseUrls.ts'
+import { Label } from "./types.ts";
+import { getLabels } from "./utils/getLabels.ts";
 
 type MyConversation = Conversation<MyContext>
 
@@ -90,4 +92,39 @@ export async function setDefaultLabel(
   })
 }
 
+export async function forwardPostLabels(
+  conversation: MyConversation,
+  ctx: MyContext
+) {
+  const userLabels = (ctx.message?.text || '').trim().split(/\s+/).map(label => ({ name: label }))
 
+  const token = conversation.session.apiToken
+  
+  const api = new OmnivoreApi(token)
+
+  const urlInput = await conversation.waitFor('message:entities:url')
+  let url = ''
+  console.log(urlInput)
+  if (urlInput.entities('text_link').length > 0) {
+    // handle case when user sends a message with text formatted link
+    const linkEntity = urlInput.entities('text_link')[0];
+    if (linkEntity && linkEntity.url) {
+      url = linkEntity.url;
+    }
+  } else {
+    // retrieve the first url from the message/post
+    const urlEntity = urlInput.entities('url')[0];
+    if (urlEntity && urlEntity.text) {
+      url = urlEntity.text;
+    }
+  }
+  
+  const defaultLabels = getLabels(urlInput)
+  const labels: Label[] = [...userLabels, ...defaultLabels] 
+  
+  api.saveUrl(url, labels)
+
+  await ctx.reply('Successfully added link to Omnivore! 😸👍', {
+    reply_markup: mainKeyboardLayout,
+  })
+}

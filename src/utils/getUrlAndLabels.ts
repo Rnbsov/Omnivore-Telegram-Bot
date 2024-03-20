@@ -5,12 +5,12 @@ import { retrieveUrl } from "./retrieveUrl.ts";
 
 export function getUrlAndLabels(ctx: Filter<MyContext, 'message:entities:url'>) {
   // parse url from the message
-  const { url, labels: labelsArray } = retrieveUrl(ctx)
+  const { url, labels: customLabels } = retrieveUrl(ctx)
 
   // add default label and source label
   const defaultAndSourceLabels = getLabels(ctx)
 
-  const labels = [...labelsArray, ...defaultAndSourceLabels]
+  const labels = [...customLabels, ...defaultAndSourceLabels]
 
   return { url, labels }
 }

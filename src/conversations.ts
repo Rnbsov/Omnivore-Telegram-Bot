@@ -102,7 +102,7 @@ export async function forwardPostLabels(
   
   const api = new OmnivoreApi(token)
 
-  const urlInput = await conversation.waitFor('message:entities:url')
+  const urlInput = await conversation.waitFor('message:entities:url', { maxMilliseconds: 500 })
   let url = ''
   console.log(urlInput)
   if (urlInput.entities('text_link').length > 0) {

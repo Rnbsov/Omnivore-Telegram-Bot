@@ -102,9 +102,9 @@ export async function forwardPostLabels(
   
   const api = new OmnivoreApi(token)
 
-  const urlInput = await conversation.waitFor('message:entities:url', { maxMilliseconds: 500 })
+  const urlInput = await conversation.waitFor('message:entities:url', { maxMilliseconds: 3750 })
   let url = ''
-  console.log(urlInput)
+
   if (urlInput.entities('text_link').length > 0) {
     // handle case when user sends a message with text formatted link
     const linkEntity = urlInput.entities('text_link')[0];
